@@ -1,41 +1,59 @@
-Attach to specific wifi network (set with designated username and password to automatically hook in)
-Upgrade to latest packages
-Set hostname
-sudo raspi-config nonint do_hostname hammy
-Enable SSH
-sudo raspi-config nonint do_ssh 0
-Create /data
+#This is the closest thing to an official raspbian image on dockerhub.
+FROM balenalib/raspberry-pi-debian:latest
 
-Enable VNC
-sudo raspi-config nonint do_vnc 0
-Set resolution so VNC will work
-sudo raspi-config 
+#Update the Pi to the latest version
+RUN apt update && \
+    apt upgrade
 
-Set Static IP or use DHCP for interface
-Switch sound interface to analog on top right
-Test if analog microphone works for HF Comms
+#Attach to specific wifi network (set with designated username and password to automatically hook in)
+#Upgrade to latest packages
+#Set hostname
+#sudo raspi-config nonint do_hostname hammy
+#Enable SSH
+#sudo raspi-config nonint do_ssh 0
+#Create /data
+RUN mkdir -p /data/recording
+
+#Enable VNC
+#sudo raspi-config nonint do_vnc 0
+#Set resolution so VNC will work
+#sudo raspi-config 
+
+#Set Static IP or use DHCP for interface
+#Switch sound interface to analog on top right
+#Test if analog microphone works for HF Comms
 
 #Basic dependencies
-sudo apt install vim
-sudo apt install code
-Install code python and C++ extensions
-sudo apt install docker
-sudo apt install portainer
+RUN apt install -y vim \
+                    code \
+                    docker \
+                    portainer \
+                    socat
 
-sudo apt install rtl-sdr
-sudo apt install gqrx-sdr
-sudo apt install cubicsdr
-Set cubicsdr recording directory to /data/recording
+#SDR components
+RUN apt install -y  rtl-sdr \
+                    gqrx-sdr \
+                    cubicsdr \
 
-sudo apt install socat
-sudo apt -y install gpsd gpsd-clients python-gps chrony python-gi-cairo
-sudo cp config/gps /etc/default/gpsd
-sudo cp config/chrony.conf /etc/chrony/chrony.conf
+#Set cubicsdr recording directory to /data/recording
 
+#External GPS Synchronization
+RUN apt -y install  gpsd \
+                    gpsd-clients \ 
+                    python-gps \ 
+                    chrony \ 
+                    python-gi-cairo
 
-sudo apt install dump1090-mutable
+RUN cp config/gps /etc/default/gpsd && \
+    cp config/chrony.conf /etc/chrony/chrony.conf
 
-Install rticonnextdds
+#Used for ADS-B 1090 reception (Flightaware)
+RUN apt install -y dump1090-mutable
+
+#Install VS Code python and C++ extensions
+
+#Set up the Pi to send data over DDS
+#Install rticonnextdds
 
 #Make python3 requirements.txt file
-pip3 install rticonnextdds-connector
+#pip3 install rticonnextdds-connector
