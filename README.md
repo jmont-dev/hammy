@@ -1,6 +1,6 @@
 # hammy
 
-Easily turn your Raspberry Pi into a functional Software-Defined Radio.
+Easily turn your Raspberry Pi into a functional Software-Defined Radio. Great for those doing amateur radio or getting started with RF.
 
 Recommended hardware:
 
