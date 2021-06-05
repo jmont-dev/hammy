@@ -1,2 +1,11 @@
 # hammy
-Code for turning a Raspberry Pi into a software-defined radio.
+
+Easily turn your Raspberry Pi into a functional Software-Defined Radio.
+
+Recommended hardware:
+
+* Raspberry Pi 4 (8GB)
+*   Canakit has a nice offering that provides most of what you need to get started.
+* RTL-SDR Receiver
+* VK-162 External GPS Receiver
+* Flightaware ADS-B 1090MHz Receiver
