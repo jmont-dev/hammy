@@ -11,6 +11,28 @@ RUN apt update && \
 #sudo raspi-config nonint do_hostname hammy
 #Enable SSH
 #sudo raspi-config nonint do_ssh 0
+
+#Generate an ssh key
+ssh-keygen
+
+#Setup the Raspberry Pi to function as a wireless hotspot
+RUN apt install -y  hostapd \
+                    dnsmasq
+
+#Thanks to raspberryconnect for this simplified installer
+curl "https://www.raspberryconnect.com/images/hsinstaller/AutoHotspot-Setup.tar.gz" -o AutoHotspot-Setup.tar.gz
+tar -xzvf AutoHotspot-Setup.tar.gz
+cd Autohotspot
+sudo ./autohotspot-setup.sh
+
+#Select option 1
+#Then select option 7 and enter the preferred SSID and password
+#Test using option 6 to force the pi to enter hotspot mode
+
+#The address of the pi when in hotspot mode is 192.168.50.5 by default.
+#You can use this to SSH and VNC into the pi even when no internet is present.
+#Just connect to the pi's wifi SSD to communicate with the device.
+
 #Create /data
 RUN mkdir -p /data/recording
 
