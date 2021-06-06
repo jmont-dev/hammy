@@ -55,9 +55,14 @@ RUN apt install -y vim \
 #SDR components
 RUN apt install -y  rtl-sdr \
                     gqrx-sdr \
-                    cubicsdr \
+                    cubicsdr
 
 #Set cubicsdr recording directory to /data/recording
+
+#Install rpitx for transmitting from the GPIO pins
+RUN git clone https://github.com/F5OEO/rpitx && \
+                                    cd rpitx && \
+                                    ./install.sh
 
 #External GPS Synchronization
 RUN apt -y install  gpsd \
@@ -70,6 +75,8 @@ RUN apt -y install  gpsd \
                     viking \
                     foxtrotgps \
                     gpsbabel
+
+#Currently requires /usr/sbin/gpsd /dev/ttyACM0 -n -F /var/run/gpsd.sock
 
 #Capture GPS data using sudo gpspipe -r
 #Record GPS data to a time-tagged file
