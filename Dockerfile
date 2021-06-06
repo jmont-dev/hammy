@@ -64,7 +64,18 @@ RUN apt -y install  gpsd \
                     gpsd-clients \ 
                     python-gps \ 
                     chrony \ 
-                    python-gi-cairo
+                    python-gi-cairo \
+                    xgps \
+                    gegps \
+                    viking \
+                    foxtrotgps \
+                    gpsbabel
+
+#Capture GPS data using sudo gpspipe -r
+#Record GPS data to a time-tagged file
+#sudo gpspipe -r -d -l -o /data/data.`date +"%Y%m%d%h%m%s"`.nmea
+#Convert GPS track to KML
+#sudo gpsbabel -i nmea -f data.160902Sep091472862456.nmea -o kml -F trackdata1.kml
 
 RUN cp config/gps /etc/default/gpsd && \
     cp config/chrony.conf /etc/chrony/chrony.conf
