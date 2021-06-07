@@ -54,6 +54,7 @@ RUN apt install -y vim \
 
 #SDR components
 RUN apt install -y  rtl-sdr \
+                    librtlsdr-dev \
                     gqrx-sdr \
                     cubicsdr
 
@@ -88,7 +89,29 @@ RUN cp config/gps /etc/default/gpsd && \
     cp config/chrony.conf /etc/chrony/chrony.conf
 
 #Used for ADS-B 1090 reception (Flightaware)
-RUN apt install -y dump1090-mutable
+#No longer maintained, build from source
+#RUN apt install -y dump1090-mutable
+
+RUN wget https://uk.flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_5.0_all.deb
+sudo dpkg -i piaware-repository_5.0_all.deb
+
+sudo apt-get update
+
+#Optional: Install piaware to automatically upload data to Flightaware
+#sudo apt-get install piaware
+#sudo piaware-config allow-auto-updates yes
+#sudo piaware-config allow-manual-updates yes
+
+sudo apt-get install dump1090-fa
+sudo apt-get install dump978-fa
+
+sudo systemctl disable dump1090-fa
+
+#/etc/systemd/system
+
+/usr/bin/dump1090-fa --device-index 0 --gain -10 --ppm 0 --max-range 360 --fix --net --net-heartbeat 60 --net-ro-size 1300 --net-ro-interval 0.2 --net-ri-port 0 --net-ro-port 30002 --net-sbs-port 30003 --net-bi-port 30004,30104 --net-bo-port 30005 --json-location-accuracy 1 --write-json /run/dump1090-fa --quiet
+
+#View web map of ADS-B signals at http://localhost/skyware
 
 #Install VS Code python and C++ extensions
 
