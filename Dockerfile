@@ -81,6 +81,13 @@ RUN apt -y install  gpsd \
 
 #Currently requires /usr/sbin/gpsd /dev/ttyACM0 -n -F /var/run/gpsd.sock
 
+#Relevant files:
+/etc/chrony/chrony.conf #Time Server Settings
+/lib/systemd/system/gpsd.service
+/lib/systemd/system/gpsd.socket
+/etc/default/gpsd
+
+
 #Capture GPS data using sudo gpspipe -r
 #Record GPS data to a time-tagged file
 #sudo gpspipe -r -d -l -o /data/data.`date +"%Y%m%d%h%m%s"`.nmea
@@ -89,6 +96,8 @@ RUN apt -y install  gpsd \
 
 RUN cp config/gps /etc/default/gpsd && \
     cp config/chrony.conf /etc/chrony/chrony.conf
+
+#/lib/systemd/system/gpsd.service
 
 #Used for ADS-B 1090 reception (Flightaware)
 #No longer maintained, build from source
