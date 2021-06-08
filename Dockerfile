@@ -6,14 +6,17 @@ RUN apt update && \
     apt upgrade
 
 #Attach to specific wifi network (set with designated username and password to automatically hook in)
-#Upgrade to latest packages
+
 #Set hostname
-#sudo raspi-config nonint do_hostname hammy
+sudo raspi-config nonint do_hostname hammy
 #Enable SSH
-#sudo raspi-config nonint do_ssh 0
+sudo raspi-config nonint do_ssh 0
 
 #Generate an ssh key
 ssh-keygen
+
+#Create /data
+RUN mkdir -p /data/recording
 
 #Setup the Raspberry Pi to function as a wireless hotspot
 RUN apt install -y  hostapd \
@@ -33,14 +36,7 @@ sudo ./autohotspot-setup.sh
 #You can use this to SSH and VNC into the pi even when no internet is present.
 #Just connect to the pi's wifi SSD to communicate with the device.
 
-#Create /data
-RUN mkdir -p /data/recording && \
-    mkdir -p /data/flight/1090
 
-sudo chmod -R 777 /data/flight/1090
-#Or add dump1090 user to appropriate group
-sudo adduser dump1090 pi
-sudo deluser dump1090 pi
 
 #Enable VNC
 #sudo raspi-config nonint do_vnc 0
@@ -111,8 +107,16 @@ sudo apt-get update
 sudo apt-get install dump1090-fa
 sudo apt-get install dump978-fa
 
+RUN mkdir -p /data/flight/1090 && \
+    sudo chmod -R 777 /data/flight/1090
+#Or add dump1090 user to appropriate group
+sudo adduser dump1090 pi
+sudo deluser dump1090 pi
+
 #Do this if you want to invoke dump1090 manually, otherwise it will run on boot.
-sudo systemctl disable dump1090-fa
+#systemctl disable dump1090-fa
+
+#Can use view1090-fa --no-interactive to view output from command line
 
 #Change startup options
 /etc/default/dump1090-fa
@@ -126,10 +130,13 @@ sudo systemctl disable dump1090-fa
 
 /usr/bin/dump1090-fa --device-index 0 --gain -10 --ppm 0 --max-range 360 --fix --net --net-heartbeat 60 --net-ro-size 1300 --net-ro-interval 0.2 --net-ri-port 0 --net-ro-port 30002 --net-sbs-port 30003 --net-bi-port 30004,30104 --net-bo-port 30005 --json-location-accuracy 1 --write-json /run/dump1090-fa --quiet
 
+%t/dump1090-fa
+
 #Record ADS-B data from dump1090 into a file.
 nc myreceiver 30003 > /data/flight/1090/file.txt
 /usr/bin/dump1090-fa --raw >> /data/
 
+#Actively updated JSON files are in /run/dump1090-fa
 #View web map of ADS-B signals at http://localhost/skyware
 
 #Install VS Code python and C++ extensions
