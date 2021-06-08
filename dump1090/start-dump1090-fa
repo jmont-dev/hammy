@@ -29,6 +29,10 @@ fi
 #Netcat can also be used to pipe data to file
 #exec nc -lk localhost 30003 > /data/flight/1090/flightlog.txt &
 
+#socat -u TCP4-LISTEN:30003,reuseaddr,fork OPEN:/tmp/test.log,creat,append
+#socat -u TCP:localhost:30003 OPEN:/data/flight/1090/test.log,creat,append &
+
+
 exec /usr/bin/dump1090-fa \
      $RECEIVER_OPTIONS $DECODER_OPTIONS $NET_OPTIONS $JSON_OPTIONS $POSITION \
      "$@" >> /data/flight/1090/$(date -u +"%Y%m%dT%H%M%S" )_flight.log 

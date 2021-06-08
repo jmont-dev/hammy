@@ -137,7 +137,7 @@ nc myreceiver 30003 > /data/flight/1090/file.txt
 /usr/bin/dump1090-fa --raw >> /data/
 
 #Actively updated JSON files are in /run/dump1090-fa
-#View web map of ADS-B signals at http://localhost/skyware
+#View web map of ADS-B signals at http://localhost/skyaware
 
 #Install VS Code python and C++ extensions
 
