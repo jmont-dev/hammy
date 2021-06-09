@@ -1,0 +1,16 @@
+[Unit]
+Description=GPS (Global Positioning System) Daemon
+Requires=gpsd.socket
+# Needed with chrony SOCK refclock
+After=chronyd.service
+
+[Service]
+Type=forking
+EnvironmentFile=-/etc/default/gpsd
+ExecStart=/usr/sbin/gpsd $GPSD_OPTIONS $DEVICES
+ExecStartPost=/bin/sh -c "gpspipe -r -d -l -o /data/gps/test_output_$$(date +%%Y-%%m-%%s).nmea"
+#StandardOutput=file:/data/output.txt
+
+[Install]
+WantedBy=multi-user.target
+Also=gpsd.socket

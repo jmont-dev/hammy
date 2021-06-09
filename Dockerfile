@@ -11,6 +11,12 @@ RUN apt update && \
 sudo raspi-config nonint do_hostname hammy
 #Enable SSH
 sudo raspi-config nonint do_ssh 0
+#Enable remote GPIO
+sudo raspi-config nonint remote_gpio 0
+
+
+Set rapsberry pi timezone to zulu (UTC)
+Set digital clock display to %T (HH:MM:SS)
 
 #Generate an ssh key
 ssh-keygen
